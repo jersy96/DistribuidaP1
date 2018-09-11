@@ -5,10 +5,8 @@
  */
 package com.progdistribuida.tcp.client;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -18,8 +16,8 @@ import java.net.Socket;
 public class ClientConnectionManager extends Thread{
     
     Socket clientSocket;
-    BufferedReader bufferedReader;
-    BufferedWriter bufferedWriter;
+    ObjectOutputStream outputStream;
+    ObjectInputStream inputStream;
     
     boolean isListening=true;
     
@@ -54,8 +52,8 @@ public class ClientConnectionManager extends Thread{
     
     public boolean extractStreams(){
         try{
-            this.bufferedReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.bufferedWriter=new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            this.outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
             return true;
         }catch(Exception error){
             return false;
@@ -66,7 +64,7 @@ public class ClientConnectionManager extends Thread{
     public void run(){
         try{
             String textLine=null;
-            while(((textLine=this.bufferedReader.readLine())!=null)
+            while(((textLine=(String)this.inputStream.readObject())!=null)
                     &&(this.isListening)){
                 this.caller.MessageHasBeenReceived(
                         clientSocket.getInetAddress()
@@ -82,8 +80,8 @@ public class ClientConnectionManager extends Thread{
     public void sendThisMessageToTheServerSide(String message){
         try{
             message+="\n";
-            this.bufferedWriter.write(message, 0, message.length());
-            bufferedWriter.flush();
+            this.outputStream.writeObject(message);
+            outputStream.flush();
         }catch (Exception ex) {
             
         }
@@ -91,8 +89,8 @@ public class ClientConnectionManager extends Thread{
     
     public void closeThisConnection(){
         try{
-            this.bufferedWriter.close();
-            this.bufferedReader.close();
+            this.inputStream.close();
+            this.outputStream.close();
             this.clientSocket.close();
         }catch (Exception ex) {
             
