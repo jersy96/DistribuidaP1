@@ -45,7 +45,7 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setText("172.17.8.21");
+        jTextField1.setText("127.0.0.1");
 
         jLabel1.setText("Destination IP");
 
