@@ -13,7 +13,7 @@ import java.net.Socket;
  *
  * @author user
  */
-public class ClientConnectionManager extends Thread{
+public class ClientConnectionManager<T> extends Thread{
     
     Socket clientSocket;
     ObjectOutputStream outputStream;
@@ -63,24 +63,19 @@ public class ClientConnectionManager extends Thread{
     @Override
     public void run(){
         try{
-            String textLine=null;
-            while(((textLine=(String)this.inputStream.readObject())!=null)
+            T object=null;
+            while(((object=(T)this.inputStream.readObject())!=null)
                     &&(this.isListening)){
-                this.caller.MessageHasBeenReceived(
-                        clientSocket.getInetAddress()
-                        .getHostAddress()+": "+
-                                this.clientSocket.getPort()+": "+ 
-                        textLine);
+                this.caller.ObjectHasBeenReceived(object);
             }
         }catch(Exception error){
             System.err.println(error.getMessage());
         }
     }
     
-    public void sendThisMessageToTheServerSide(String message){
+    public void sendThisObjectToTheServerSide(Object object){
         try{
-            message+="\n";
-            this.outputStream.writeObject(message);
+            this.outputStream.writeObject(object);
             outputStream.flush();
         }catch (Exception ex) {
             

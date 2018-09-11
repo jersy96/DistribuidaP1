@@ -17,7 +17,7 @@ public class ClientServerModelExample {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new ServerManager(9019);
+        new <String>ServerManager(9019);
     }
     
 }

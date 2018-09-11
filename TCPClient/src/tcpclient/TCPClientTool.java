@@ -12,7 +12,7 @@ import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
  *
  * @author asaad
  */
-public class TCPClientTool extends javax.swing.JFrame implements ClientConnectionManagerInterface{
+public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnectionManagerInterface<T>{
 
     ClientConnectionManager clientConnection;
     /**
@@ -148,14 +148,14 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.clientConnection=new ClientConnectionManager(this, 
+        this.clientConnection=new <T>ClientConnectionManager(this,
                 this.jTextField1.getText(),
                 Integer.parseInt(this.jTextField2.getText()));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.clientConnection.
-                sendThisMessageToTheServerSide(
+                sendThisObjectToTheServerSide(
                         this.jTextField3.getText());
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -189,7 +189,7 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TCPClientTool().setVisible(true);
+                new <String>TCPClientTool().setVisible(true);
             }
         });
     }
@@ -209,7 +209,7 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void MessageHasBeenReceived(String message) {
-        this.jTextArea1.append(message+"\n");
+    public void ObjectHasBeenReceived(T object) {
+        this.jTextArea1.append(object+"\n");
     }
 }

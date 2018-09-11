@@ -9,8 +9,8 @@ package com.progdistribuida.tcp.client;
  *
  * @author asaad
  */
-public interface ClientConnectionManagerInterface {
+public interface ClientConnectionManagerInterface<T> {
     
-    public void MessageHasBeenReceived(String message);
+    public void ObjectHasBeenReceived(T object);
     
 }

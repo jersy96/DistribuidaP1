@@ -17,7 +17,7 @@ import java.util.Vector;
  *
  * @author user
  */
-public class ServerManager extends Thread implements ClientConnectionManagerInterface{
+public class ServerManager<T> extends Thread implements ClientConnectionManagerInterface<T>{
     
     boolean isServerAcceptingConnections=true;
     ServerSocket serverSocket;
@@ -74,17 +74,13 @@ public class ServerManager extends Thread implements ClientConnectionManagerInte
     }
 
     @Override
-    public void MessageHasBeenReceived(String message) {
-        System.out.println(message);
-        if(message.indexOf("killall")!=-1){
-            this.killAllConnections();
-        }
-        sendThisMessgeToAll(message);
+    public void ObjectHasBeenReceived(T object) {
+        System.out.println(object);
     }
     
-    public void sendThisMessgeToAll(String message){
+    public void sendThisMessgeToAll(Object object){
         for(ClientConnectionManager current:listOfClients){
-            current.sendThisMessageToTheServerSide(message);
+            current.sendThisObjectToTheServerSide(object);
         }
     }
 
