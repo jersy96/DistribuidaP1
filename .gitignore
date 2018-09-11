@@ -1,0 +1,9 @@
+TCPClient/*
+TCPClient/*/*
+!TCPClient/src
+!TCPClient/src/*
+
+ClientServerModelExample/*
+ClientServerModelExample/*/*
+!ClientServerModelExample/src
+!ClientServerModelExample/src/*
