@@ -74,6 +74,7 @@ public class ClientConnectionManager extends Thread{
                 inputStream.readFully(bytes);
                 Object object=bytesToObject(bytes);
                 this.caller.ObjectHasBeenReceived(object);
+                System.out.println("lei");
             }
         }catch(Exception error){
             System.err.println(error.getMessage());
@@ -92,6 +93,7 @@ public class ClientConnectionManager extends Thread{
             outputStream.writeInt(bytes.length); // write length of the message
             outputStream.write(bytes);
             outputStream.flush();
+            System.out.println("escribi");
         }catch (Exception ex) {
             
         }

@@ -76,8 +76,11 @@ public class ServerManager extends Thread implements ClientConnectionManagerInte
 
     @Override
     public void ObjectHasBeenReceived(Object object) {
+        System.out.println("HABLAA1");
         FileWrapper fw = (FileWrapper)object;
+        System.out.println("HABLAA2");
         System.out.println(fw.getFileName());
+        System.out.println("HABLA3");
     }
     
     public void sendThisObjectToAll(Object object){
