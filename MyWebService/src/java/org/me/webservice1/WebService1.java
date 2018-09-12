@@ -5,6 +5,8 @@
  */
 package org.me.webservice1;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -22,5 +24,19 @@ public class WebService1 {
     @WebMethod(operationName = "hello")
     public String hello(@WebParam(name = "name") String txt) {
         return "Hello " + txt + " !";
+    }
+    
+    @WebMethod(operationName = "sendFile")
+    public String sendFile(
+            @WebParam(name = "fileName") String fileName,
+            @WebParam(name = "bytes") byte[] bytes){
+        try {
+            String path = "/home/javier/Desktop/test/server/"+fileName;
+            FileOutputStream fos = new FileOutputStream(path);
+            fos.write(bytes);
+            return path;
+        } catch (IOException ex) {
+            return "ERROR";
+        }
     }
 }
