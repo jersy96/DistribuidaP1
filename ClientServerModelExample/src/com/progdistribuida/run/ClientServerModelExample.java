@@ -5,6 +5,7 @@
  */
 package com.progdistribuida.run;
 
+import com.progdistribuida.tcp.client.FileWrapper;
 import com.progdistribuida.tcp.server.ServerManager;
 
 /**
@@ -17,7 +18,7 @@ public class ClientServerModelExample {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new <String>ServerManager(9019);
+        new <FileWrapper>ServerManager(9019);
     }
     
 }

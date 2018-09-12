@@ -7,6 +7,9 @@ package tcpclient;
 
 import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
+import com.progdistribuida.tcp.client.FileWrapper;
+import java.io.File;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -15,6 +18,7 @@ import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
 public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnectionManagerInterface<T>{
 
     ClientConnectionManager clientConnection;
+    FileWrapper fileWrapper;
     /**
      * Creates new form TCPClientTool
      */
@@ -39,9 +43,7 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
         jLabel3 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,27 +62,27 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
             }
         });
 
-        jLabel3.setText("Message to be sent");
+        jLabel3.setText("File Path");
 
-        jTextField3.setText("Prog. Distribuida, lo mejor :)");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Send");
+        jButton2.setText("Load File");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Incomming messages");
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jButton3.setText("Send File");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,7 +91,6 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -102,14 +103,14 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
                                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel2)))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -133,11 +134,9 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         pack();
@@ -154,10 +153,19 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.clientConnection.
-                sendThisObjectToTheServerSide(
-                        this.jTextField3.getText());
+        JFileChooser jf = new JFileChooser();
+        jf.showOpenDialog(this);
+        File file = jf.getSelectedFile();
+        if(file != null)
+        {
+            jTextField3.setText(file.getAbsolutePath());
+        }
+        this.fileWrapper = new FileWrapper(file);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.clientConnection.sendThisObjectToTheServerSide(this.fileWrapper);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -189,7 +197,7 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new <String>TCPClientTool().setVisible(true);
+                new <FileWrapper>TCPClientTool().setVisible(true);
             }
         });
     }
@@ -197,12 +205,10 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -210,6 +216,6 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
 
     @Override
     public void ObjectHasBeenReceived(T object) {
-        this.jTextArea1.append(object+"\n");
+        
     }
 }
