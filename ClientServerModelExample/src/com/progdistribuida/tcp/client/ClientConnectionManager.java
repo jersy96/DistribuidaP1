@@ -5,10 +5,13 @@
  */
 package com.progdistribuida.tcp.client;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -18,8 +21,8 @@ import java.net.Socket;
 public class ClientConnectionManager extends Thread{
     
     Socket clientSocket;
-    BufferedReader bufferedReader;
-    BufferedWriter bufferedWriter;
+    DataInputStream inputStream;
+    DataOutputStream outputStream;
     
     boolean isListening=true;
     
@@ -54,8 +57,8 @@ public class ClientConnectionManager extends Thread{
     
     public boolean extractStreams(){
         try{
-            this.bufferedReader=new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.bufferedWriter=new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            this.inputStream=new DataInputStream(clientSocket.getInputStream());
+            this.outputStream=new DataOutputStream(clientSocket.getOutputStream());
             return true;
         }catch(Exception error){
             return false;
@@ -65,35 +68,46 @@ public class ClientConnectionManager extends Thread{
     @Override
     public void run(){
         try{
-            Object object=null;
-            while(((object=this.bufferedReader.readLine())!=null)
-                    &&(this.isListening)){
-                this.caller.ObjectHasBeenReceived(
-                        clientSocket.getInetAddress()
-                        .getHostAddress()+": "+
-                                this.clientSocket.getPort()+": "+ 
-                        object);
+            int len;
+            while((len=inputStream.readInt())>0 && this.isListening){
+                byte[] bytes = new byte[len];
+                inputStream.readFully(bytes);
+                Object object=bytesToObject(bytes);
+                this.caller.ObjectHasBeenReceived(object);
             }
         }catch(Exception error){
             System.err.println(error.getMessage());
         }
+    }    
+
+    private Object bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
     }
-    
+
     public void sendThisObjectToTheServerSide(Object object){
         try{
-            String message = (String)object;
-            message+="\n";
-            this.bufferedWriter.write(message, 0, message.length());
-            bufferedWriter.flush();
+            byte[] bytes = objectToBytes(object);
+            outputStream.writeInt(bytes.length); // write length of the message
+            outputStream.write(bytes);
+            outputStream.flush();
         }catch (Exception ex) {
             
         }
     }
-    
+
+    public static byte[] objectToBytes(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+
     public void closeThisConnection(){
         try{
-            this.bufferedWriter.close();
-            this.bufferedReader.close();
+            this.inputStream.close();
+            this.outputStream.close();
             this.clientSocket.close();
         }catch (Exception ex) {
             
