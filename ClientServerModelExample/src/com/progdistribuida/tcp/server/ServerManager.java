@@ -8,6 +8,8 @@ package com.progdistribuida.tcp.server;
 import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
 import com.progdistribuida.tcp.client.FileWrapper;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -78,6 +80,12 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
     public void ObjectHasBeenReceived(T object) {
         FileWrapper fw = (FileWrapper)object;
         System.out.println(fw.getFileName());
+        try {
+            FileOutputStream fos = new FileOutputStream("/home/javier/Desktop/test/"+fw.getFileName());
+            fos.write(fw.getFileBytes());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void sendThisMessgeToAll(Object object){
