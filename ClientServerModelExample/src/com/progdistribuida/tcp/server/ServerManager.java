@@ -7,6 +7,7 @@ package com.progdistribuida.tcp.server;
 
 import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
+import com.progdistribuida.tcp.client.FileWrapper;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -75,12 +76,8 @@ public class ServerManager extends Thread implements ClientConnectionManagerInte
 
     @Override
     public void ObjectHasBeenReceived(Object object) {
-        String message = (String)object;
-        System.out.println(message);
-        if(message.indexOf("killall")!=-1){
-            this.killAllConnections();
-        }
-        sendThisObjectToAll(message);
+        FileWrapper fw = (FileWrapper)object;
+        System.out.println(fw.getFileName());
     }
     
     public void sendThisObjectToAll(Object object){
