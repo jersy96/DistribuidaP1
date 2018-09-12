@@ -4,18 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  *
  * @author javier
  */
-public class FileWrapper {
+public class FileWrapper implements Serializable{
     private String fileName;
-    private ByteArrayInputStream fileBytes;
+    private byte[] fileBytes;
     
     public FileWrapper(File file){
         fileName = file.getName();
-        fileBytes = new ByteArrayInputStream(readBytesFromFile(file));
+        fileBytes = readBytesFromFile(file);
     }
     
     private byte[] readBytesFromFile(File file) {
@@ -47,7 +48,7 @@ public class FileWrapper {
         return fileName;
     }
 
-    public ByteArrayInputStream getFileBytes() {
+    public byte[] getFileBytes() {
         return fileBytes;
     }
 }
