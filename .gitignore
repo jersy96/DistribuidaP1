@@ -7,3 +7,8 @@ ClientServerModelExample/*
 ClientServerModelExample/*/*
 !ClientServerModelExample/src
 !ClientServerModelExample/src/*
+
+MyWebService/*
+MyWebService/*/*
+!MyWebService/src/
+!MyWebService/src/*
