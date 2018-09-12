@@ -95,7 +95,7 @@ public class ClientConnectionManager extends Thread{
             outputStream.flush();
             System.out.println("escribi");
         }catch (Exception ex) {
-            
+            ex.printStackTrace();
         }
     }
 
