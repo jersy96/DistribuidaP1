@@ -74,17 +74,19 @@ public class ServerManager extends Thread implements ClientConnectionManagerInte
     }
 
     @Override
-    public void MessageHasBeenReceived(String message) {
+    public void ObjectHasBeenReceived(Object object) {
+        String message = (String)object;
         System.out.println(message);
         if(message.indexOf("killall")!=-1){
             this.killAllConnections();
         }
-        sendThisMessgeToAll(message);
+        sendThisObjectToAll(message);
     }
     
-    public void sendThisMessgeToAll(String message){
+    public void sendThisObjectToAll(Object object){
+        String message = (String)object;
         for(ClientConnectionManager current:listOfClients){
-            current.sendThisMessageToTheServerSide(message);
+            current.sendThisObjectToTheServerSide(message);
         }
     }
 

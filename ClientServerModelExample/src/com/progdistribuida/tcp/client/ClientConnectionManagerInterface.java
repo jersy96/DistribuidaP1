@@ -11,6 +11,6 @@ package com.progdistribuida.tcp.client;
  */
 public interface ClientConnectionManagerInterface {
     
-    public void MessageHasBeenReceived(String message);
+    public void ObjectHasBeenReceived(Object object);
     
 }

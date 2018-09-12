@@ -155,7 +155,7 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.clientConnection.
-                sendThisMessageToTheServerSide(
+                sendThisObjectToTheServerSide(
                         this.jTextField3.getText());
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -209,7 +209,8 @@ public class TCPClientTool extends javax.swing.JFrame implements ClientConnectio
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void MessageHasBeenReceived(String message) {
+    public void ObjectHasBeenReceived(Object object) {
+        String message = (String)object;
         this.jTextArea1.append(message+"\n");
     }
 }

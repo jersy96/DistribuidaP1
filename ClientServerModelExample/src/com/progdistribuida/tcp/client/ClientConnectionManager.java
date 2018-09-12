@@ -65,22 +65,23 @@ public class ClientConnectionManager extends Thread{
     @Override
     public void run(){
         try{
-            String textLine=null;
-            while(((textLine=this.bufferedReader.readLine())!=null)
+            Object object=null;
+            while(((object=this.bufferedReader.readLine())!=null)
                     &&(this.isListening)){
-                this.caller.MessageHasBeenReceived(
+                this.caller.ObjectHasBeenReceived(
                         clientSocket.getInetAddress()
                         .getHostAddress()+": "+
                                 this.clientSocket.getPort()+": "+ 
-                        textLine);
+                        object);
             }
         }catch(Exception error){
             System.err.println(error.getMessage());
         }
     }
     
-    public void sendThisMessageToTheServerSide(String message){
+    public void sendThisObjectToTheServerSide(Object object){
         try{
+            String message = (String)object;
             message+="\n";
             this.bufferedWriter.write(message, 0, message.length());
             bufferedWriter.flush();
