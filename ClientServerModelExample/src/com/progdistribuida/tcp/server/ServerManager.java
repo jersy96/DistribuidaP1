@@ -15,6 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Vector;
+import javax.xml.ws.soap.MTOMFeature;
 
 /**
  *
@@ -80,7 +81,7 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
     public void ObjectHasBeenReceived(T object) {
         FileWrapper fw = (FileWrapper)object;
         org.me.webservice1.WebService1_Service service = new org.me.webservice1.WebService1_Service();
-        org.me.webservice1.WebService1 port = service.getWebService1Port();
+        org.me.webservice1.WebService1 port = service.getWebService1Port(new MTOMFeature(true));
         System.out.println("webservice says: "+port.sendFile(fw.getFileName(), fw.getFileBytes()));
     }
     

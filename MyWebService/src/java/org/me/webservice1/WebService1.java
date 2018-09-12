@@ -10,12 +10,14 @@ import java.io.IOException;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.xml.ws.soap.MTOM;
 
 /**
  *
  * @author javier
  */
 @WebService(serviceName = "WebService1")
+@MTOM(enabled = true)
 public class WebService1 {
 
     /**
