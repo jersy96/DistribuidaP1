@@ -79,13 +79,9 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
     @Override
     public void ObjectHasBeenReceived(T object) {
         FileWrapper fw = (FileWrapper)object;
-        System.out.println(fw.getFileName());
-        try {
-            FileOutputStream fos = new FileOutputStream("/home/javier/Desktop/test/"+fw.getFileName());
-            fos.write(fw.getFileBytes());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        org.me.webservice1.WebService1_Service service = new org.me.webservice1.WebService1_Service();
+        org.me.webservice1.WebService1 port = service.getWebService1Port();
+        System.out.println("webservice says: "+port.sendFile(fw.getFileName(), fw.getFileBytes()));
     }
     
     public void sendThisMessgeToAll(Object object){
