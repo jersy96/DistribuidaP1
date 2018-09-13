@@ -8,11 +8,10 @@ package com.progdistribuida.tcp.server;
 import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
 import com.progdistribuida.tcp.client.FileWrapper;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.xml.ws.soap.MTOMFeature;
@@ -82,7 +81,14 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
         FileWrapper fw = (FileWrapper)object;
         org.me.webservice1.WebService1_Service service = new org.me.webservice1.WebService1_Service();
         org.me.webservice1.WebService1 port = service.getWebService1Port(new MTOMFeature(true));
-        System.out.println("webservice says: "+port.sendFile(fw.getFileName(), fw.getFileBytes()));
+        port.createFile(fw.getFileName());
+        int partitionSize = 1024;
+        byte[] fileBytes = fw.getFileBytes();
+        for (int i = 0; i < fileBytes.length; i += partitionSize) {
+            byte[] partition;
+            partition = Arrays.copyOfRange(fileBytes, i, Math.min(i + partitionSize, fileBytes.length));
+            port.appendToFile(fw.getFileName(), partition);
+        }
     }
     
     public void sendThisMessgeToAll(Object object){
