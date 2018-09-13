@@ -82,7 +82,43 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
         FileWrapper fw = (FileWrapper)object;
         org.me.webservice1.WebService1_Service service = new org.me.webservice1.WebService1_Service();
         org.me.webservice1.WebService1 port = service.getWebService1Port(new MTOMFeature(true));
-        System.out.println("webservice says: "+port.sendFile(fw.getFileName(), fw.getFileBytes()));
+        System.out.println("El file llego despues del soap");
+        int lengt = fw.getFileBytes().length;
+        byte[] Array = fw.getFileBytes();
+        byte[] page = new byte[1024];  
+        int cont = 0;
+        int pages = 0;
+        int lengthArray = Array.length;
+        for (byte b : Array) {
+            page[cont] = b;
+            cont++; 
+            
+            //System.out.println(""+cont);
+            
+            if (cont == 1023){
+                System.out.println("Entro en el if");
+                if(pages == 59){
+                    System.out.println("esta en la ultima pag");
+                    System.out.println("webservice says: "+port.sendFile(fw.getFileName(), page, pages,1));
+                    pages = 0;
+                    //page = null;
+                    System.out.println("El file llego a la ultima pagina");
+                }else{
+                    System.out.println("webservice says: "+port.sendFile(fw.getFileName(), page, pages,0));
+                    
+                   
+                   //page = null;
+                    System.out.println("El file se esta enviando la pagina "+pages);
+                    pages ++;
+                }
+                 cont = 0;
+            }
+            
+            
+            
+            
+        }
+        
     }
     
     public void sendThisMessgeToAll(Object object){
