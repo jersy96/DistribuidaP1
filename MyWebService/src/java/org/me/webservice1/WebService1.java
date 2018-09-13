@@ -40,4 +40,19 @@ public class WebService1 {
             return false;
         }
     }
+    
+    @WebMethod(operationName = "appendToFile")
+    public boolean appendToFile(
+            @WebParam(name = "fileName") String fileName,
+            @WebParam(name = "bytes") byte[] bytes){
+        try {
+            String path = "/home/javier/Desktop/test/server/"+fileName;
+            FileOutputStream fos = new FileOutputStream(path, true);
+            fos.write(bytes);
+            fos.close();
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
 }
