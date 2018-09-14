@@ -13,10 +13,16 @@ import java.io.Serializable;
 public class FileWrapper implements Serializable{
     private String fileName;
     private byte[] fileBytes;
+    private String action;
     
     public FileWrapper(File file){
         fileName = file.getName();
         fileBytes = readBytesFromFile(file);
+    }
+    
+    public FileWrapper(String filename){
+        fileName = filename;
+        fileBytes = null;
     }
     
     private byte[] readBytesFromFile(File file) {
@@ -50,5 +56,21 @@ public class FileWrapper implements Serializable{
 
     public byte[] getFileBytes() {
         return fileBytes;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setFileBytes(byte[] fileBytes) {
+        this.fileBytes = fileBytes;
     }
 }

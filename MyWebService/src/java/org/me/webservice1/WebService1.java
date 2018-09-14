@@ -6,8 +6,10 @@
 package org.me.webservice1;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -54,5 +56,48 @@ public class WebService1 {
         } catch (IOException ex) {
             return false;
         }
+    }
+    
+    @WebMethod(operationName = "getFileSize")
+    public int getFileSize(@WebParam(name = "fileName") String fileName){
+        String path = "/home/javier/Desktop/test/server/"+fileName;
+        File file = new File(path);
+        return readBytesFromFile(file).length;
+    }
+    
+    @WebMethod(operationName = "getFilePartition")
+    public byte[] getFilePartition(
+            @WebParam(name = "fileName") String fileName,
+            @WebParam(name = "start") int start,
+            @WebParam(name = "end") int end){
+        String path = "/home/javier/Desktop/test/server/"+fileName;
+        File file = new File(path);
+        byte[] fileBytes = readBytesFromFile(file);
+        return Arrays.copyOfRange(fileBytes, start, end);
+    }
+    
+    private byte[] readBytesFromFile(File file) {
+
+        FileInputStream fileInputStream = null;
+        byte[] bytesArray = null;
+
+        try {
+            bytesArray = new byte[(int) file.length()];
+            //read file into bytes[]
+            fileInputStream = new FileInputStream(file);
+            fileInputStream.read(bytesArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return bytesArray;
     }
 }

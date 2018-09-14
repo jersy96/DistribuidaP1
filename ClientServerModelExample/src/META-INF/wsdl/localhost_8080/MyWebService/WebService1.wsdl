@@ -19,6 +19,18 @@
 <message name="appendToFileResponse">
 <part name="parameters" element="tns:appendToFileResponse"/>
 </message>
+<message name="getFilePartition">
+<part name="parameters" element="tns:getFilePartition"/>
+</message>
+<message name="getFilePartitionResponse">
+<part name="parameters" element="tns:getFilePartitionResponse"/>
+</message>
+<message name="getFileSize">
+<part name="parameters" element="tns:getFileSize"/>
+</message>
+<message name="getFileSizeResponse">
+<part name="parameters" element="tns:getFileSizeResponse"/>
+</message>
 <message name="createFile">
 <part name="parameters" element="tns:createFile"/>
 </message>
@@ -33,6 +45,14 @@
 <operation name="appendToFile">
 <input wsam:Action="http://webservice1.me.org/WebService1/appendToFileRequest" message="tns:appendToFile"/>
 <output wsam:Action="http://webservice1.me.org/WebService1/appendToFileResponse" message="tns:appendToFileResponse"/>
+</operation>
+<operation name="getFilePartition">
+<input wsam:Action="http://webservice1.me.org/WebService1/getFilePartitionRequest" message="tns:getFilePartition"/>
+<output wsam:Action="http://webservice1.me.org/WebService1/getFilePartitionResponse" message="tns:getFilePartitionResponse"/>
+</operation>
+<operation name="getFileSize">
+<input wsam:Action="http://webservice1.me.org/WebService1/getFileSizeRequest" message="tns:getFileSize"/>
+<output wsam:Action="http://webservice1.me.org/WebService1/getFileSizeResponse" message="tns:getFileSizeResponse"/>
 </operation>
 <operation name="createFile">
 <input wsam:Action="http://webservice1.me.org/WebService1/createFileRequest" message="tns:createFile"/>
@@ -52,6 +72,24 @@
 </output>
 </operation>
 <operation name="appendToFile">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getFilePartition">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getFileSize">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

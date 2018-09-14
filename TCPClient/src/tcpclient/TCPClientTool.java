@@ -9,6 +9,10 @@ import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
 import com.progdistribuida.tcp.client.FileWrapper;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /**
@@ -44,6 +48,8 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
         jTextField3 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jTextField4 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,6 +90,13 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
             }
         });
 
+        jButton4.setText("Download FIle");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,11 +119,14 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                            .addComponent(jTextField4))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -136,7 +152,11 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,8 +184,16 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.fileWrapper.setAction("upload");
         this.clientConnection.sendThisObjectToTheServerSide(this.fileWrapper);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        String fileName = jTextField4.getText();
+        FileWrapper fw = new FileWrapper(fileName);
+        fw.setAction("download");
+        this.clientConnection.sendThisObjectToTheServerSide(fw);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,16 +234,35 @@ public class TCPClientTool<T> extends javax.swing.JFrame implements ClientConnec
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void ObjectHasBeenReceived(T object) {
+        FileWrapper fw = (FileWrapper)object;
         
+        File file = new File("");
+        String pathProj = file.getAbsolutePath();
+        File folder =  new File("Download");
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        
+        String path = pathProj + "/" + folder.getName() + "/" + fw.getFileName();
+        try {
+            FileOutputStream outputstream = new FileOutputStream(path);
+            outputstream.write(fw.getFileBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(TCPClientTool.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.println(path);
     }
 }

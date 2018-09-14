@@ -8,12 +8,18 @@ package com.progdistribuida.tcp.server;
 import com.progdistribuida.tcp.client.ClientConnectionManager;
 import com.progdistribuida.tcp.client.ClientConnectionManagerInterface;
 import com.progdistribuida.tcp.client.FileWrapper;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.ws.soap.MTOMFeature;
 
 /**
@@ -81,13 +87,27 @@ public class ServerManager<T> extends Thread implements ClientConnectionManagerI
         FileWrapper fw = (FileWrapper)object;
         org.me.webservice1.WebService1_Service service = new org.me.webservice1.WebService1_Service();
         org.me.webservice1.WebService1 port = service.getWebService1Port(new MTOMFeature(true));
-        port.createFile(fw.getFileName());
-        int partitionSize = 1024;
-        byte[] fileBytes = fw.getFileBytes();
-        for (int i = 0; i < fileBytes.length; i += partitionSize) {
-            byte[] partition;
-            partition = Arrays.copyOfRange(fileBytes, i, Math.min(i + partitionSize, fileBytes.length));
-            port.appendToFile(fw.getFileName(), partition);
+        if("upload".equals(fw.getAction())){
+            port.createFile(fw.getFileName());
+            int partitionSize = 1024;
+            byte[] fileBytes = fw.getFileBytes();
+            for (int i = 0; i < fileBytes.length; i += partitionSize) {
+                byte[] partition;
+                partition = Arrays.copyOfRange(fileBytes, i, Math.min(i + partitionSize, fileBytes.length));
+                port.appendToFile(fw.getFileName(), partition);
+            }
+        }else{
+            int fileSize = port.getFileSize(fw.getFileName());
+            byte[] bytes = new byte[fileSize];
+            int partitionSize = 1024;
+            for (int i = 0; i < fileSize; i += partitionSize) {
+                byte[] partition;
+                partition = port.getFilePartition(fw.getFileName(), i, Math.min(i + partitionSize, fileSize));
+                System.arraycopy(partition, 0, bytes, i, partition.length);
+            }
+            FileWrapper fw2 = new FileWrapper(fw.getFileName());
+            fw2.setFileBytes(bytes);
+            sendThisMessgeToAll(fw2);
         }
     }
     

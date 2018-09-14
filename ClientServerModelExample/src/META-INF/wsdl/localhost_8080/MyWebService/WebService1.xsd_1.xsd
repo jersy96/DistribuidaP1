@@ -8,6 +8,14 @@
 
 <xs:element name="createFileResponse" type="tns:createFileResponse"/>
 
+<xs:element name="getFilePartition" type="tns:getFilePartition"/>
+
+<xs:element name="getFilePartitionResponse" type="tns:getFilePartitionResponse"/>
+
+<xs:element name="getFileSize" type="tns:getFileSize"/>
+
+<xs:element name="getFileSizeResponse" type="tns:getFileSizeResponse"/>
+
 <xs:element name="hello" type="tns:hello"/>
 
 <xs:element name="helloResponse" type="tns:helloResponse"/>
@@ -24,6 +32,20 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="getFilePartition">
+<xs:sequence>
+<xs:element name="fileName" type="xs:string" minOccurs="0"/>
+<xs:element name="start" type="xs:int"/>
+<xs:element name="end" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFilePartitionResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="createFile">
 <xs:sequence>
 <xs:element name="fileName" type="xs:string" minOccurs="0"/>
@@ -33,6 +55,18 @@
 <xs:complexType name="createFileResponse">
 <xs:sequence>
 <xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFileSize">
+<xs:sequence>
+<xs:element name="fileName" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFileSizeResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"/>
 </xs:sequence>
 </xs:complexType>
 
